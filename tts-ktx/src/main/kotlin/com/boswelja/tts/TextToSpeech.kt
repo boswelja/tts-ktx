@@ -12,6 +12,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
+/**
+ * A wrapper class for [TextToSpeech], with additional functions for improved Kotlin support.
+ * @param context [Context].
+ */
 class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
 
     private val coroutineJob = Job()
@@ -40,6 +44,17 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
         setOnUtteranceProgressListener(utteranceProgressListener)
     }
 
+    /**
+     * Plays the earcon using the specified queueing mode and parameters.
+     * @param earcon The earcon to play.
+     * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
+     * @param params Optional parameters for the request. Supported parameter names:
+     * Engine#KEY_PARAM_STREAM, Engine specific parameters may be passed in but the parameter
+     * keys must be prefixed by the name of the engine they are intended for. For example the keys
+     * "com.svox.pico_foo" and "com.svox.pico:bar" will be passed to the engine named
+     * "com.svox.pico" if it is being used.
+     * @return See [Result].
+     */
     suspend fun playEarcon(
         earcon: String,
         queueMode: Int = QUEUE_ADD,
@@ -62,6 +77,13 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
         return Result.FAILED
     }
 
+    /**
+     * Plays silence for the specified amount of time using the specified queue mode.
+     * @param duration The duration of the silence.
+     * @param timeUnit The [TimeUnit] for the given duration.
+     * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
+     * @return See [Result].
+     */
     suspend fun playSilentUtterance(
         duration: Long,
         timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
@@ -83,8 +105,21 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
         return Result.FAILED
     }
 
+    /**
+     * Speaks the text using the specified queuing strategy and speech parameters, the text may be
+     * spanned with TtsSpans.
+     * @param text The string of text to be spoken. If longer than getMaxSpeechInputLength(),
+     * [IllegalArgumentException] is thrown.
+     * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
+     * @param params Optional parameters for the request. Supported parameter names:
+     * Engine#KEY_PARAM_STREAM, Engine#KEY_PARAM_VOLUME, Engine#KEY_PARAM_PAN. Engine specific
+     * parameters may be passed in but the parameter keys must be prefixed by the name of the
+     * engine they are intended for. For example the keys "com.svox.pico_foo" and
+     * "com.svox.pico:bar" will be passed to the engine named "com.svox.pico" if it is being used.
+     * @return See [Result].
+     */
     suspend fun speak(
-        text: String,
+        text: CharSequence,
         queueMode: Int = QUEUE_ADD,
         params: Bundle? = null
     ): Result {
@@ -108,6 +143,17 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
         return Result.FAILED
     }
 
+    /**
+     * Synthesizes the given text to a [File] using the specified parameters.
+     * @param text The string of text to be spoken. If longer than getMaxSpeechInputLength(),
+     * [IllegalArgumentException] is thrown.
+     * @param file File to write the generated audio data to.
+     * @param params Optional parameters for the request. Engine specific parameters may be passed
+     * in but the parameter keys must be prefixed by the name of the engine they are intended for.
+     * For example the keys "com.svox.pico_foo" and "com.svox.pico:bar" will be passed to the
+     * engine named "com.svox.pico" if it is being used.
+     * @return See [Result].
+     */
     suspend fun synthesizeToFile(
         text: CharSequence,
         file: File,
@@ -134,6 +180,7 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
     }
 
     override fun stop(): Int {
+        // Send failure to any pending jobs in the queue
         coroutineScope.launch {
             currentQueue.values.forEach {
                 it.send(Result.FAILED)
@@ -143,6 +190,7 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
     }
 
     override fun shutdown() {
+        // Cancel any coroutines running
         coroutineJob.cancel()
         super.shutdown()
     }
