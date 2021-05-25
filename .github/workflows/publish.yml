@@ -78,7 +78,7 @@ jobs:
           compareLink: true
           filterByMilestone: false
           unreleased: false
-          lastTag: true
+          onlyLastTag: true
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
