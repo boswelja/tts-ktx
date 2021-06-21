@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">tts-ktx sample</string>
+
+    <string name="initialise">Initialise</string>
+    <string name="init_success">TTS Ready!</string>
+    <string name="init_failed">Failed to initialize TTS</string>
+
+    <string name="starting">Starting %s</string>
+    <string name="finished">Finished %s</string>
+    <string name="failed">Failed %s</string>
+
+    <string name="hello_world">Hello, world!</string>
+    <string name="initial_delay">Delayed start</string>
+    <string name="chaining_calls">Chained calls</string>
+
+    <string name="please_wait">Please Wait</string>
+    <string name="all_done">All Done</string>
+</resources>
