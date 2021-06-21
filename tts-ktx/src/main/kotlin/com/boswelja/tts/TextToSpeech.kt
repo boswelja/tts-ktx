@@ -84,6 +84,7 @@ class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
      * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
      * @return See [Result].
      */
+    @Deprecated("Use Kotlin's delay(millis) function instead")
     suspend fun playSilentUtterance(
         duration: Long,
         timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
