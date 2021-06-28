@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">tts-ktx sample</string>
 
-    <string name="initialise">Initialise</string>
-    <string name="init_success">TTS Ready!</string>
-    <string name="init_failed">Failed to initialize TTS</string>
-
     <string name="starting">Starting %s</string>
     <string name="finished">Finished %s</string>
     <string name="failed">Failed %s</string>

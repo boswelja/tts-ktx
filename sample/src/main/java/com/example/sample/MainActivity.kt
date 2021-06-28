@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
@@ -19,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -71,10 +69,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     onShowSnackbar: (String) -> Unit
 ) {
-    val context = LocalContext.current
     val viewModel: MainViewModel = viewModel()
-
-    val ttsReady = viewModel.ttsReady
 
     Column(
         modifier = modifier,
@@ -82,34 +77,18 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            enabled = !ttsReady,
-            content = { Text(stringResource(R.string.initialise)) },
-            onClick = {
-                val result = viewModel.initTts()
-                if (result) {
-                    onShowSnackbar(context.getString(R.string.init_success))
-                } else {
-                    onShowSnackbar(context.getString(R.string.init_failed))
-                }
-            }
-        )
-        Divider()
-        Button(
-            enabled = ttsReady,
             content = { Text(stringResource(R.string.hello_world)) },
             onClick = {
                 viewModel.helloWorldSynthesis(onShowSnackbar)
             }
         )
         Button(
-            enabled = ttsReady,
             content = { Text(stringResource(R.string.initial_delay)) },
             onClick = {
                 viewModel.initialDelaySynthesis(onShowSnackbar)
             }
         )
         Button(
-            enabled = ttsReady,
             content = { Text(stringResource(R.string.chaining_calls)) },
             onClick = {
                 viewModel.chainedSynthesis(onShowSnackbar)
