@@ -8,13 +8,13 @@ Add tts-ktx to your project with:
 implementation("io.github.boswelja.tts-ktx:tts-ktx:$latestVersion")
 ```
 
-Create an instance of `TextToSpeech`:
+Make use of `withTextToSpeech`:
 ```kotlin
-import com.boswelja.tts.TextToSpeech
-
-val tts = TextToSpeech(context)
 coroutineScope.launch {
-    val result = tts.speak("Hello World!")
+    context.withTextToSpeech {
+        // Calls here are scoped to TextToSpeech, so you're free to make calls as you please
+        speak("Hello, World!")
+    }
 }
 ```
 
