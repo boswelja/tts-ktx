@@ -25,6 +25,7 @@ suspend fun Context.withTextToSpeech(actions: suspend TextToSpeech.() -> Unit) {
     if (initSuccess) {
         // Execute user actions
         tts.actions()
+        tts.shutdown()
     } else {
         // Throw an exception on failure
         throw IllegalStateException("Failed to init TextToSpeech")
