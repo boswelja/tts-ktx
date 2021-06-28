@@ -2,7 +2,7 @@ package com.boswelja.tts
 
 import android.content.Context
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.SUCCESS
 import android.speech.tts.UtteranceProgressListener
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -10,7 +10,26 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.launch
+
+/**
+ * Executes [actions] with an initialized [TextToSpeech] instance.
+ */
+suspend fun Context.withTextToSpeech(actions: suspend TextToSpeech.() -> Unit) {
+    val channel = Channel<Boolean>()
+    val tts = TextToSpeech(this) { initResult ->
+        channel.trySendBlocking(initResult == SUCCESS)
+    }
+    val initSuccess = channel.receive()
+    if (initSuccess) {
+        // Execute user actions
+        tts.actions()
+    } else {
+        // Throw an exception on failure
+        throw IllegalStateException("Failed to init TextToSpeech")
+    }
+}
 
 /**
  * A wrapper class for [TextToSpeech], with additional functions for improved Kotlin support.
@@ -19,7 +38,7 @@ import kotlinx.coroutines.launch
 class TextToSpeech(
     context: Context,
     onInitListener: OnInitListener
-) : TextToSpeech(context, onInitListener) {
+) : android.speech.tts.TextToSpeech(context, onInitListener) {
 
     private val coroutineJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Default + coroutineJob)
