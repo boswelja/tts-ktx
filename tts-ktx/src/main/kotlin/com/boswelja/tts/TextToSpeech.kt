@@ -17,19 +17,19 @@ import kotlinx.coroutines.launch
  * Executes [actions] with an initialized [TextToSpeech] instance.
  */
 suspend fun Context.withTextToSpeech(actions: suspend TextToSpeech.() -> Unit) {
+    // Initialize TTS
     val channel = Channel<Boolean>()
     val tts = TextToSpeech(this) { initResult ->
         channel.trySendBlocking(initResult == SUCCESS)
     }
     val initSuccess = channel.receive()
-    if (initSuccess) {
-        // Execute user actions
-        tts.actions()
-        tts.shutdown()
-    } else {
-        // Throw an exception on failure
-        throw IllegalStateException("Failed to init TextToSpeech")
-    }
+
+    // Check init was successful
+    check(initSuccess)
+
+    // Execute user actions
+    tts.actions()
+    tts.shutdown()
 }
 
 /**
@@ -147,8 +147,8 @@ class TextToSpeech(
         queueMode: Int = QUEUE_ADD,
         params: Bundle? = null
     ): Result {
-        if (text.length > getMaxSpeechInputLength())
-            throw IllegalArgumentException("text exceeds the max length allowed for speech")
+        // Check text length is less than the max
+        require(text.length <= getMaxSpeechInputLength())
 
         val utteranceId = uidCreator.next()
         val queueResult = speak(
@@ -183,8 +183,8 @@ class TextToSpeech(
         file: File,
         params: Bundle? = null,
     ): Result {
-        if (text.length > getMaxSpeechInputLength())
-            throw IllegalArgumentException("text exceeds the max length allowed for speech")
+        // Check text length is less than the max
+        require(text.length <= getMaxSpeechInputLength())
 
         val utteranceId = uidCreator.next()
         val queueResult = synthesizeToFile(
