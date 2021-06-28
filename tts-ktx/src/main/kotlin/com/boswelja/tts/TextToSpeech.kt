@@ -16,7 +16,10 @@ import kotlinx.coroutines.launch
  * A wrapper class for [TextToSpeech], with additional functions for improved Kotlin support.
  * @param context [Context].
  */
-class TextToSpeech(context: Context) : TextToSpeech(context, OnInitListener()) {
+class TextToSpeech(
+    context: Context,
+    onInitListener: OnInitListener
+) : TextToSpeech(context, onInitListener) {
 
     private val coroutineJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Default + coroutineJob)
