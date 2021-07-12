@@ -6,6 +6,7 @@ import android.speech.tts.TextToSpeech.SUCCESS
 import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
 import java.io.File
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 /**
  * Executes [actions] with an initialized [TextToSpeech] instance.
@@ -25,6 +25,30 @@ suspend fun <R> Context.withTextToSpeech(
     voice: Voice? = null,
     actions: suspend TextToSpeech.() -> R
 ): R {
+    // Get TTS instance
+    val tts = getTextToSpeech(
+        voicePitch, speechRate, language, voice
+    )
+
+    // Execute user actions
+    val result = tts.actions()
+
+    // Shut down TTS instance when we're done.
+    tts.shutdown()
+
+    return result
+}
+
+/**
+ * Suspends until a [TextToSpeech] instance is successfully initialized. Note using this requires
+ * you to call [TextToSpeech.shutdown] when you've finished.
+ */
+suspend fun Context.getTextToSpeech(
+    voicePitch: Float = 1.0f,
+    speechRate: Float = 1.0f,
+    language: Locale = Locale.getDefault(),
+    voice: Voice? = null
+): TextToSpeech {
     // Initialize TTS
     val channel = Channel<Boolean>()
     val tts = TextToSpeech(this) { initResult ->
@@ -41,11 +65,7 @@ suspend fun <R> Context.withTextToSpeech(
     voice?.let { tts.setVoice(voice) }
     tts.language = language
 
-    // Execute user actions
-    val result = tts.actions()
-    tts.shutdown()
-
-    return result
+    return tts
 }
 
 /**
