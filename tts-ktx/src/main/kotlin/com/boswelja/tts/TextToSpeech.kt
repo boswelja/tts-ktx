@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 /**
  * Executes [actions] with an initialized [TextToSpeech] instance.
  */
-suspend fun Context.withTextToSpeech(actions: suspend TextToSpeech.() -> Unit) {
+suspend fun <R> Context.withTextToSpeech(actions: suspend TextToSpeech.() -> R): R {
     // Initialize TTS
     val channel = Channel<Boolean>()
     val tts = TextToSpeech(this) { initResult ->
@@ -28,8 +28,10 @@ suspend fun Context.withTextToSpeech(actions: suspend TextToSpeech.() -> Unit) {
     check(initSuccess)
 
     // Execute user actions
-    tts.actions()
+    val result = tts.actions()
     tts.shutdown()
+
+    return result
 }
 
 /**
