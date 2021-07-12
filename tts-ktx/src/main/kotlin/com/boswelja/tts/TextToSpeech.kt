@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech.SUCCESS
 import android.speech.tts.UtteranceProgressListener
+import android.speech.tts.Voice
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
@@ -12,11 +13,18 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 /**
  * Executes [actions] with an initialized [TextToSpeech] instance.
  */
-suspend fun <R> Context.withTextToSpeech(actions: suspend TextToSpeech.() -> R): R {
+suspend fun <R> Context.withTextToSpeech(
+    voicePitch: Float = 1.0f,
+    speechRate: Float = 1.0f,
+    language: Locale = Locale.getDefault(),
+    voice: Voice? = null,
+    actions: suspend TextToSpeech.() -> R
+): R {
     // Initialize TTS
     val channel = Channel<Boolean>()
     val tts = TextToSpeech(this) { initResult ->
@@ -26,6 +34,12 @@ suspend fun <R> Context.withTextToSpeech(actions: suspend TextToSpeech.() -> R):
 
     // Check init was successful
     check(initSuccess)
+
+    // Set up this TTS instance
+    tts.setPitch(voicePitch)
+    tts.setSpeechRate(speechRate)
+    voice?.let { tts.setVoice(voice) }
+    tts.language = language
 
     // Execute user actions
     val result = tts.actions()
