@@ -35,12 +35,12 @@ android {
         jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-beta09"
+        kotlinCompilerExtensionVersion = "1.1.0-alpha02"
     }
 }
 
 dependencies {
-    val composeVersion = "1.0.1"
+    val composeVersion = "1.1.0-alpha02"
 
     implementation(project(":tts-ktx"))
 
