@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    val composeVersion = "1.1.0-alpha02"
+    val composeVersion = "1.1.0-alpha03"
 
     implementation(project(":tts-ktx"))
 
