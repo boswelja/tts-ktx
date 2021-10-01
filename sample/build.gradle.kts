@@ -46,7 +46,7 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.7.0-beta02")
     implementation("androidx.appcompat:appcompat:1.4.0-beta01")
-    implementation("androidx.activity:activity-compose:1.4.0-alpha02")
+    implementation("androidx.activity:activity-compose:1.4.0-beta01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-beta01")
 
     implementation("androidx.compose.ui:ui:$composeVersion")
