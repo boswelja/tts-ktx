@@ -45,7 +45,7 @@ dependencies {
     implementation(project(":tts-ktx"))
 
     implementation("androidx.core:core-ktx:1.7.0-rc01")
-    implementation("androidx.appcompat:appcompat:1.4.0-beta01")
+    implementation("androidx.appcompat:appcompat:1.4.0-rc01")
     implementation("androidx.activity:activity-compose:1.4.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
 
