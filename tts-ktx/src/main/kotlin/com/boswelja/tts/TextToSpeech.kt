@@ -83,7 +83,9 @@ public class TextToSpeech(
     private val currentQueue = mutableMapOf<String, Channel<Result>>()
 
     private val utteranceProgressListener = object : UtteranceProgressListener() {
-        override fun onStart(utteranceId: String?) { }
+        override fun onStart(utteranceId: String?) {
+            // We don't need to do anything here
+        }
 
         override fun onDone(utteranceId: String?) {
             coroutineScope.launch {

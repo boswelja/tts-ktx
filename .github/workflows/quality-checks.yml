@@ -54,17 +54,10 @@ jobs:
           distribution: 'adopt'
           java-version: 11
           cache: 'gradle'
-      - name: Run ktlint
-        uses: le0nidas/ktlint-pr-comments@v1.2
-        with:
-          repotoken: ${{ secrets.GITHUB_TOKEN }}
-          arguments: "--android"
-      - name: Cache Gradle packages
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle.kts') }}
-      - run: bash ./gradlew lint
+      - name: Run detekt
+        run: bash ./gradlew detekt
+      - name: Run Lint
+        run: bash ./gradlew lint
       - uses: yutailang0119/action-android-lint@v2
         if: ${{ always() }}
         continue-on-error: true
