@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 /**
  * Executes [actions] with an initialized [TextToSpeech] instance.
  */
-suspend fun <R> Context.withTextToSpeech(
+public suspend fun <R> Context.withTextToSpeech(
     voicePitch: Float = 1.0f,
     speechRate: Float = 1.0f,
     language: Locale = Locale.getDefault(),
@@ -43,7 +43,7 @@ suspend fun <R> Context.withTextToSpeech(
  * Suspends until a [TextToSpeech] instance is successfully initialized. Note using this requires
  * you to call [TextToSpeech.shutdown] when you've finished.
  */
-suspend fun Context.getTextToSpeech(
+public suspend fun Context.getTextToSpeech(
     voicePitch: Float = 1.0f,
     speechRate: Float = 1.0f,
     language: Locale = Locale.getDefault(),
@@ -72,7 +72,7 @@ suspend fun Context.getTextToSpeech(
  * A wrapper class for [TextToSpeech], with additional functions for improved Kotlin support.
  * @param context [Context].
  */
-class TextToSpeech(
+public class TextToSpeech(
     context: Context,
     onInitListener: OnInitListener
 ) : android.speech.tts.TextToSpeech(context, onInitListener) {
@@ -105,8 +105,9 @@ class TextToSpeech(
 
     /**
      * Plays the earcon using the specified queueing mode and parameters.
-     * @param earcon The earcon to play.
-     * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
+     * @param earcon The name of the earcon to play.
+     * @param queueMode The queueing mode. See [android.speech.tts.TextToSpeech.QUEUE_ADD] and
+     * [android.speech.tts.TextToSpeech.QUEUE_FLUSH].
      * @param params Optional parameters for the request. Supported parameter names:
      * Engine#KEY_PARAM_STREAM, Engine specific parameters may be passed in but the parameter
      * keys must be prefixed by the name of the engine they are intended for. For example the keys
@@ -114,7 +115,7 @@ class TextToSpeech(
      * "com.svox.pico" if it is being used.
      * @return See [Result].
      */
-    suspend fun playEarcon(
+    public suspend fun playEarcon(
         earcon: String,
         queueMode: Int = QUEUE_ADD,
         params: Bundle? = null
@@ -140,11 +141,12 @@ class TextToSpeech(
      * Plays silence for the specified amount of time using the specified queue mode.
      * @param duration The duration of the silence.
      * @param timeUnit The [TimeUnit] for the given duration.
-     * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
+     * @param queueMode The queueing mode. See [android.speech.tts.TextToSpeech.QUEUE_ADD] and
+     * [android.speech.tts.TextToSpeech.QUEUE_FLUSH].
      * @return See [Result].
      */
     @Deprecated("Use Kotlin's delay(millis) function instead")
-    suspend fun playSilentUtterance(
+    public suspend fun playSilentUtterance(
         duration: Long,
         timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
         queueMode: Int = QUEUE_ADD
@@ -170,7 +172,8 @@ class TextToSpeech(
      * spanned with TtsSpans.
      * @param text The string of text to be spoken. If longer than getMaxSpeechInputLength(),
      * [IllegalArgumentException] is thrown.
-     * @param queueMode The queueing mode. See [QUEUE_ADD] and [QUEUE_FLUSH].
+     * @param queueMode The queueing mode. See [android.speech.tts.TextToSpeech.QUEUE_ADD] and
+     * [android.speech.tts.TextToSpeech.QUEUE_FLUSH].
      * @param params Optional parameters for the request. Supported parameter names:
      * Engine#KEY_PARAM_STREAM, Engine#KEY_PARAM_VOLUME, Engine#KEY_PARAM_PAN. Engine specific
      * parameters may be passed in but the parameter keys must be prefixed by the name of the
@@ -178,7 +181,7 @@ class TextToSpeech(
      * "com.svox.pico:bar" will be passed to the engine named "com.svox.pico" if it is being used.
      * @return See [Result].
      */
-    suspend fun speak(
+    public suspend fun speak(
         text: CharSequence,
         queueMode: Int = QUEUE_ADD,
         params: Bundle? = null
@@ -214,7 +217,7 @@ class TextToSpeech(
      * engine named "com.svox.pico" if it is being used.
      * @return See [Result].
      */
-    suspend fun synthesizeToFile(
+    public suspend fun synthesizeToFile(
         text: CharSequence,
         file: File,
         params: Bundle? = null,

@@ -3,7 +3,7 @@ package com.boswelja.tts
 /**
  * [TextToSpeech] job results.
  */
-enum class Result {
+public enum class Result {
     /**
      * Indicates the operation was successful.
      */
