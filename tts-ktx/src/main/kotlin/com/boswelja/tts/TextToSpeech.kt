@@ -98,6 +98,17 @@ public class TextToSpeech(
                 currentQueue[utteranceId]?.send(Result.FAILED)
             }
         }
+
+        override fun onStop(utteranceId: String?, interrupted: Boolean) {
+            coroutineScope.launch {
+                val result = if (interrupted) {
+                    Result.STOPPED
+                } else {
+                    Result.FLUSHED
+                }
+                currentQueue[utteranceId]?.send(result)
+            }
+        }
     }
 
     init {
