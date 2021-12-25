@@ -94,6 +94,10 @@ public class TextToSpeech(
         }
 
         override fun onError(utteranceId: String?) {
+            // Ignore this since it's deprecated
+        }
+
+        override fun onError(utteranceId: String?, errorCode: Int) {
             coroutineScope.launch {
                 currentQueue[utteranceId]?.send(Result.FAILED)
             }
