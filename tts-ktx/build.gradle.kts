@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
     testImplementation("junit:junit:4.13.2")
 }
 
