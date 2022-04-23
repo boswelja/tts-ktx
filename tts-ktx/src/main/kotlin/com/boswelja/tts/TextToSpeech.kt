@@ -7,7 +7,6 @@ import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
 import java.io.File
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -127,36 +126,6 @@ public class TextToSpeech(
             earcon,
             queueMode,
             params,
-            utteranceId
-        )
-
-        if (queueResult == SUCCESS) {
-            val channel = Channel<Result>()
-            currentQueue[utteranceId] = channel
-            return channel.receive()
-        }
-
-        return Result.FAILED
-    }
-
-    /**
-     * Plays silence for the specified amount of time using the specified queue mode.
-     * @param duration The duration of the silence.
-     * @param timeUnit The [TimeUnit] for the given duration.
-     * @param queueMode The queueing mode. See [android.speech.tts.TextToSpeech.QUEUE_ADD] and
-     * [android.speech.tts.TextToSpeech.QUEUE_FLUSH].
-     * @return See [Result].
-     */
-    @Deprecated("Use Kotlin's delay(millis) function instead")
-    public suspend fun playSilentUtterance(
-        duration: Long,
-        timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
-        queueMode: Int = QUEUE_ADD
-    ): Result {
-        val utteranceId = uidCreator.next()
-        val queueResult = playSilentUtterance(
-            TimeUnit.MILLISECONDS.convert(duration, timeUnit),
-            queueMode,
             utteranceId
         )
 
