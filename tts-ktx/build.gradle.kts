@@ -5,10 +5,11 @@ plugins {
     id("kotlin-android")
     id("maven-publish")
     id("signing")
-    id("io.gitlab.arturbosch.detekt").version("1.19.0")
+    id("io.gitlab.arturbosch.detekt").version("1.21.0")
 }
 
 android {
+    namespace = "com.boswelja.tts"
     compileSdk = 31
 
     defaultConfig {

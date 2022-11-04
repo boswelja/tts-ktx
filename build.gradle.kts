@@ -1,12 +1,12 @@
 buildscript {
-    val kotlinVersion = "1.7.10"
+    val kotlinVersion = "1.7.20"
 
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.0.0-alpha01")
+        classpath("com.android.tools.build:gradle:8.0.0-alpha07")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
