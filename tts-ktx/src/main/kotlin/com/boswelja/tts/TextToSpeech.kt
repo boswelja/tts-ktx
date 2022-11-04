@@ -93,6 +93,7 @@ public class TextToSpeech(
             }
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onError(utteranceId: String?) {
             // Ignore this since it's deprecated
         }
