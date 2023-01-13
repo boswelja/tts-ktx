@@ -3,16 +3,15 @@ plugins {
     id("kotlin-android")
     id("maven-publish")
     id("signing")
-    id("io.gitlab.arturbosch.detekt").version("1.21.0")
+    id("io.gitlab.arturbosch.detekt") version "1.22.0"
 }
 
 android {
     namespace = "com.boswelja.tts"
-    compileSdk = 31
+    compileSdk = 33
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -41,7 +40,6 @@ android {
 
 dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    testImplementation("junit:junit:4.13.2")
 }
 
 publishing {
