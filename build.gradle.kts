@@ -1,38 +1,22 @@
-buildscript {
-    val kotlinVersion = "1.7.20"
-
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.0.0-alpha07")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 plugins {
+    id("com.android.library") version "7.4.0" apply false
+    id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
-group = Publishing.groupId
-version = Publishing.version ?: "0.1.0"
+group = "io.github.boswelja.tts-ktx"
+version =  findProperty("version") ?: "0.1.0"
 
 nexusPublishing {
     repositories {
         sonatype {
+            val ossrhUsername: String? by project
+            val ossrhPassword: String? by project
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl
                 .set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username.set(Publishing.ossrhUsername)
-            password.set(Publishing.ossrhPassword)
+            username.set(ossrhUsername)
+            password.set(ossrhPassword)
         }
     }
 }

@@ -1,5 +1,3 @@
-import Publishing.configureMavenPublication
-
 plugins {
     id("com.android.library")
     id("kotlin-android")
@@ -29,13 +27,15 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
     kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs = freeCompilerArgs + "-Xexplicit-api=warning"
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
@@ -44,42 +44,52 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 }
 
-// Bundle sources with binaries
-val androidSourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].kotlin.name)
-}
-artifacts {
-    archives(androidSourcesJar)
-}
-
 publishing {
-    publications {
-        create(
-            "release",
-            configureMavenPublication(
-                "tts-ktx",
-                "Kotlin extensions for Android's TextToSpeech class",
-                "https://github.com/boswelja/tts-ktx",
-                project.configurations.implementation.get().allDependencies
-            ) {
-                artifact("$buildDir/outputs/aar/${project.name}-release.aar")
-                artifact(androidSourcesJar)
+    repositories {
+        maven("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            val ossrhUsername: String? by project
+            val ossrhPassword: String? by project
+            name = "sonatype"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
             }
-        )
+        }
     }
-    repositories(Publishing.repositories)
+    publications {
+        publications.withType<MavenPublication> {
+            pom {
+                name.set("tts-ktx")
+                description.set("Kotlin extensions for Android's TextToSpeech class")
+                url.set("https://github.com/boswelja/tts-ktx")
+                licenses {
+                    license {
+                        name.set("Apache 2.0")
+                        url.set("https://github.com/boswelja/tts-ktx/blob/main/LICENSE")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("boswelja")
+                        name.set("Jack Boswell")
+                        email.set("boswelja@outlook.com")
+                        url.set("https://github.com/boswelja")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:github.com/boswelja/tts-ktx.git")
+                    developerConnection.set("scm:git:ssh://github.com/boswelja/tts-ktx.git")
+                    url.set("https://github.com/boswelja/tts-ktx")
+                }
+            }
+        }
+    }
 }
 
 // Create signing config
-ext["signing.keyId"] = Publishing.signingKeyId
-ext["signing.password"] = Publishing.signingPassword
-ext["signing.secretKeyRingFile"] = Publishing.signingSecretKeyring
 signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
-}
-
-// Make publish task depend on assembleRelease
-tasks.named("publishReleasePublicationToSonatypeRepository") {
-    dependsOn("assembleRelease")
 }
